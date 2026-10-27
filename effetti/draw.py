@@ -16,7 +16,7 @@ import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-from .theme import P, ROOT
+from .theme import P, ROOT, FONT, WGHT, covers
 from .i18n import tr, effetto
 
 # The neutral palette. Effects take colours through P.c(role, neutral), so a theme can replace them.
@@ -66,10 +66,27 @@ def font(kind, size):
     return _fc[k]
 
 
+def fontfor(kind, size, s):
+    """font(), but falls back to the neutral font when the theme's font has no glyph for a character of s."""
+    if kind in P.fonts and not covers(P.fonts[kind], s): return font_neutral(kind, size)
+    return font(kind, size)
+
+
+def font_neutral(kind, size):
+    k = ('neutral', kind, int(size))
+    if k not in _fc:
+        f = ImageFont.truetype(FONT[kind], max(6, int(size)))
+        if kind in WGHT:
+            try: f.set_variation_by_axes(list(WGHT[kind]))
+            except Exception: pass
+        _fc[k] = f
+    return _fc[k]
+
+
 def text_img(s, size, kind='bold', fill=None, stroke=0, stroke_fill=None, shadow=0, glow=None):
     fill = P.c('over', (255, 255, 255)) if fill is None else fill
     stroke_fill = P.c('on-surface', INK) if stroke_fill is None else stroke_fill
-    f = font(kind, size)
+    f = fontfor(kind, size, s)
     bb = f.getbbox(s, stroke_width=stroke)
     pad = int(size * 0.2 + shadow * 2.5 + (glow[1] * 2.5 if glow else 0)) + 4
     w, h = bb[2] - bb[0] + 2 * pad, bb[3] - bb[1] + 2 * pad
@@ -90,7 +107,7 @@ def text_img(s, size, kind='bold', fill=None, stroke=0, stroke_fill=None, shadow
 
 def fit_text(s, max_w, kind='bold', start=400, **kw):
     size = start
-    while size > 10 and font(kind, size).getlength(s) > max_w: size = int(size * 0.92)
+    while size > 10 and fontfor(kind, size, s).getlength(s) > max_w: size = int(size * 0.92)
     return text_img(s, size, kind, **kw)
 
 

@@ -86,6 +86,7 @@ class Theme:
         self.name = 'neutro'
         self.roles = {}            # role -> (r, g, b)
         self.fonts = {}            # kind -> path
+        self.font_axes = {}        # kind -> variable-font axes, e.g. [800] for the weight
         self.radius = 1.0          # 1 = the original corners, 0 = square
         self.shadows = True
         self.glass = True
@@ -104,13 +105,23 @@ class Theme:
 
     def r(self, px):
         """A corner radius, scaled by the theme (0 for square corners)."""
-        return px * self.radius
+        return px if self.radius == 1 else px * self.radius
+
+    def get(self, role):
+        """The theme's colour for `role`, or None when the theme leaves it neutral."""
+        return self.roles.get(role)
+
+    def f(self, role, neutral):
+        """A colour as float32 0..1 for numpy maths: the theme's, or `neutral` (already 0..1) untouched."""
+        import numpy as np
+        v = self.roles.get(role)
+        return np.float32(neutral) if v is None else np.float32(v) / 255
 
     def font_path(self, kind):
         return self.fonts.get(kind, FONT[kind])
 
     def axes(self, kind):
-        return WGHT.get(kind) if kind not in self.fonts else None
+        return WGHT.get(kind) if kind not in self.fonts else self.font_axes.get(kind)
 
 
 P = Theme()
@@ -183,13 +194,31 @@ def use(spec=None, theme_id=None):
         t.roles[role] = tokens[v] if v in tokens else hexrgb(v)
     car = dict(cfg.get('caratteri', {}))
     car.update(cfg.get('caratteri_tema', {}).get(tid, {}))
-    for key, f in car.items():
-        p = ds_fonts.get(f) or os.path.join(base, f)
-        if not os.path.exists(p): raise SystemExit(f"Carattere non trovato per '{key}': {f}")
-        for kind in GROUPS.get(key, (key,)): t.fonts[kind] = p
+    for key, f in car.items():   # "ui": "fonts/X.ttf", or {"file": "fonts/X.ttf", "assi": [800]} for a variable font
+        spec = f if isinstance(f, dict) else {'file': f}
+        p = ds_fonts.get(spec['file']) or os.path.join(base, spec['file'])
+        if not os.path.exists(p): raise SystemExit(f"Carattere non trovato per '{key}': {spec['file']}")
+        for kind in GROUPS.get(key, (key,)):
+            t.fonts[kind] = p
+            if spec.get('assi'): t.font_axes[kind] = tuple(spec['assi'])
     st = cfg.get('stile', {})
     t.radius = float(st.get('raggio', 1.0))
     t.shadows = bool(st.get('ombre', True)); t.glass = bool(st.get('vetro', True))
     t.glow = bool(st.get('bagliore', True)); t.gradients = bool(st.get('sfumature', True))
     P.__dict__.update(t.__dict__)
     return P
+
+
+_cmaps = {}
+
+
+def covers(path, s):
+    """True when the font at `path` has a glyph for every character of `s` (True if we cannot tell)."""
+    if path not in _cmaps:
+        try:
+            from fontTools.ttLib import TTFont
+            _cmaps[path] = set(TTFont(path, fontNumber=0).getBestCmap())
+        except Exception:
+            _cmaps[path] = None
+    cm = _cmaps[path]
+    return cm is None or all(ord(ch) in cm or ch in '\n\t\ufe0f' for ch in s)

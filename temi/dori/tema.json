@@ -1,0 +1,36 @@
+{
+  "nome": "Dori",
+  "nota": "Il design system di Andrea Dorizza (claude.ai, tipo Design System), esportato così com'è: tokens.json, fonts/, licenses/. Quattro varianti: screen (default), raster, video per i video; paper per il sito. Look piatto: angoli vivi, niente ombre, vetro, bagliori o sfumature. Matrix Sans nei video, Schibsted Grotesk sulla carta.",
+  "design_system": "tokens.json",
+  "tema": "screen",
+  "colori": {
+    "surface": "bg",
+    "on-surface": "fg",
+    "dark": "fg",
+    "on-dark": "bg",
+    "over": "on-footage",
+    "paper": "bg",
+    "accent": "accent",
+    "on-accent": "on-accent",
+    "accent2": "accent2",
+    "success": "accent",
+    "danger": "accent",
+    "muted": "muted",
+    "line": "dim",
+    "ground": "bg"
+  },
+  "colori_tema": {
+    "paper": {"dark": "ink", "on-dark": "paper", "over": "paper", "accent": "pale-sage", "on-accent": "ink", "success": "ink", "danger": "ink"}
+  },
+  "caratteri_tema": {
+    "screen": {"display": "fonts/MatrixSansScreen-Regular.ttf", "serif": "fonts/MatrixSansScreen-Regular.ttf", "mono": "fonts/MatrixSansScreen-Regular.ttf", "hand": "fonts/MatrixSansScreen-Regular.ttf", "ui": "fonts/MatrixSansScreen-Regular.ttf"},
+    "raster": {"display": "fonts/MatrixSansRaster-Regular.ttf", "serif": "fonts/MatrixSansRaster-Regular.ttf", "mono": "fonts/MatrixSansRaster-Regular.ttf", "hand": "fonts/MatrixSansRaster-Regular.ttf", "ui": "fonts/MatrixSansRaster-Regular.ttf"},
+    "video": {"display": "fonts/MatrixSansVideo-Regular.ttf", "serif": "fonts/MatrixSansVideo-Regular.ttf", "mono": "fonts/MatrixSansVideo-Regular.ttf", "hand": "fonts/MatrixSansVideo-Regular.ttf", "ui": "fonts/MatrixSansVideo-Regular.ttf"},
+    "paper": {"display": {"file": "fonts/SchibstedGrotesk-latin.woff2", "assi": [900]},
+              "serif": {"file": "fonts/SchibstedGrotesk-latin-italic.woff2", "assi": [700]},
+              "mono": "fonts/MatrixSansPrint-Regular.ttf",
+              "hand": {"file": "fonts/SchibstedGrotesk-latin-italic.woff2", "assi": [900]},
+              "ui": {"file": "fonts/SchibstedGrotesk-latin.woff2", "assi": [700]}}
+  },
+  "stile": {"raggio": 0, "ombre": false, "vetro": false, "bagliore": false, "sfumature": false}
+}

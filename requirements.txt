@@ -2,3 +2,5 @@ numpy
 opencv-python
 pillow
 mediapipe
+fonttools
+brotli
