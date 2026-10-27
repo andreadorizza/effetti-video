@@ -1,0 +1,9 @@
+.venv/
+.build/
+__pycache__/
+*.pyc
+.DS_Store
+*.mp4
+*.mov
+*.words.json
+/prove/
