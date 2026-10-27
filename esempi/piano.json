@@ -1,0 +1,10 @@
+{
+  "tema": "neutro",
+  "effetti": [
+    {"effetto": "agganciato", "inizio": 0.4, "fine": 3.0, "testo": "SEI TU"},
+    {"effetto": "orbita", "inizio": 3.0, "fine": 6.0},
+    {"effetto": "parola-dietro", "inizio": 6.2, "fine": 8.4, "testo": "CLAUDE"},
+    {"effetto": "timbro", "inizio": 9.1, "fine": 10.6, "testo": "BOCCIATO"},
+    {"effetto": "commento", "inizio": 11.0, "fine": 15.0, "testo": "EFFETTI"}
+  ]
+}

@@ -9,7 +9,7 @@ Elenco:          python scripts/effetti.py --elenco
 import argparse, json, sys
 
 from . import fx, theme  # noqa: F401  (fx registers every effect)
-from .i18n import EFFECTS, LOOKS, option, resolve, set_lang
+from .i18n import EFFECTS, LOOKS, option, ordered, resolve, set_lang
 
 
 def normalise(d):
@@ -47,7 +47,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
 
     if a.list:
-        for i, (k, v) in enumerate(EFFECTS.items()): print(f"{i + 1:2d}. {k:20s} {v['desc']}  ({v['en']})")
+        for i, (k, v) in enumerate(ordered()): print(f"{i + 1:2d}. {k:20s} {v['desc']}  ({v['en']})")
         print('\nStili con nome: ' + ', '.join(f'{k} = {v[0]} stile={v[1]}' for k, v in LOOKS.items() if k.endswith('glitter')))
         return
     top = {}

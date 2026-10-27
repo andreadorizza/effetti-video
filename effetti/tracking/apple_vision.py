@@ -13,9 +13,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 SWIFT = os.path.join(HERE, 'vision_stream.swift')
 BIN = os.path.join(ROOT, '.build', 'vision_stream')
-# Vision's face box is taller and a little wider than YuNet's, which the effects were placed against:
-# scale its width and lift its centre so every effect lands where it does with MediaPipe.
-FACE_W, FACE_DY = 1.0, 0.0
+# Vision's face box is wider than YuNet's and sits lower, and the effects were placed against YuNet's.
+# Measured on 259 frames of a talking head (tests, 2026-10-28): YuNet width = 0.80 x Vision width
+# (p10-p90 0.77-0.84), YuNet centre = Vision centre - 0.12 x Vision width. Corrected here.
+FACE_W, FACE_DY = 0.80, -0.12
 
 
 def binary():

@@ -18,6 +18,19 @@ def tr(it, en):
 
 EFFECTS = {}   # it name -> dict(fn, en, desc, cards)
 ALIASES = {}   # any accepted name -> it name
+# The original numbering, so --elenco lists them 1 to 45 as the README does. New effects go after.
+ORDER = ['noise', 'lineup', 'locked-on', 'orbit', 'lean-in', 'backdrop-word', 'spotlight', 'the-bill', 'moody', 'swipe',
+         'todo', 'comment-box', 'tap', 'pause-point', 'uninstall', 'reel-frame', 'shortcut-rain', 'reject-stamp',
+         'countdown-flip', 'rabbit-hole', 'cover-star', 'scribble', 'glass-widgets', 'red-collage', 'split-headline',
+         'pastel-word', 'check-pills', 'timeline', 'headline-box', 'profile-wall', 'tier-list', 'broll-split', 'phone-fan',
+         'dot-reveal', 'headline-wall', 'checklist', 'liquid-glass-graph', 'carousel-spin', 'match-cut', 'apple-toggles',
+         'led-sign', 'slow-push', 'over-the-shoulder-zoom', 'messages', 'place-in-grid']
+
+
+def ordered():
+    return sorted(EFFECTS.items(), key=lambda kv: (ORDER.index(kv[1]['en']) if kv[1]['en'] in ORDER else len(ORDER), kv[0]))
+
+
 # Named looks of another effect: name -> (effect, look)
 LOOKS = {'riflettore-glitter': ('riflettore', 'sparkle'), 'glitter-spotlight': ('riflettore', 'sparkle'),
          'glitter': ('riflettore', 'sparkle')}
@@ -60,7 +73,7 @@ VALUES = {
     'look': {'glitter': 'sparkle', 'scintille': 'sparkle', 'editoriale': 'editorial', 'semplice': 'simple',
              'barra': 'bar', 'rosso': 'red'},
     'grade': {'cupo': 'moody', 'bn': 'bw', 'bianconero': 'bw', 'bianco-e-nero': 'bw', 'caldo': 'warm',
-              'freddo': 'cool', 'vivido': 'pop', 'acceso': 'pop'},
+              'freddo': 'cool', 'vivido': 'pop', 'acceso': 'pop', 'nessuno': 'none'},
     'font': {'grassetto': 'bold', 'corsivo': 'serif', 'mano': 'hand', 'macchina': 'mono'},
     'pos': {'sotto': 'below', 'sopra': 'above'},
 }
