@@ -20,7 +20,7 @@ Un tema è un file JSON (vedi docs/design-system.md e temi/):
 `colori` dà a ogni ruolo un token del design system (per nome) o un colore esadecimale.
 Con un design system e senza `colori`, i ruoli si mappano da soli sui nomi di token più comuni.
 """
-import json, os
+import colorsys, json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -87,6 +87,21 @@ def contrast(a, b):
     return (la + 0.05) / (lb + 0.05)
 
 
+def deepen(col, ground, target=3.0):
+    """`col` in the same hue, darker on a light ground or lighter on a dark one, until it reads at `target`
+    against `ground`; None when no shade of that hue gets there (a grey keeps the old fallback)."""
+    h, l, sat = colorsys.rgb_to_hls(*(x / 255 for x in col[:3]))
+    if sat < 0.15:
+        return None
+    dark_ground = contrast(ground, (0, 0, 0)) < contrast(ground, (255, 255, 255))
+    for step in range(1, 41):
+        l2 = min(1.0, l + step * 0.02) if dark_ground else max(0.0, l - step * 0.02)
+        c = tuple(int(round(x * 255)) for x in colorsys.hls_to_rgb(h, l2, min(1.0, sat + step * 0.01)))
+        if contrast(c, ground) >= target:
+            return c
+    return None
+
+
 def hexrgb(v):
     """'#rgb', '#rrggbb' or '#rrggbbaa' (or a list) -> (r, g, b)."""
     if isinstance(v, (list, tuple)): return tuple(int(x) for x in v[:3])
@@ -106,6 +121,8 @@ class Theme:
         self.glass = True
         self.glow = True
         self.gradients = True
+        self.tints = []            # (r, g, b) a theme's palette of hues, e.g. pastels: see _tint()
+        self.tint_roles = set()    # the roles whose colours keep their meaning by hue
 
     @property
     def neutral(self): return not self.roles
@@ -115,15 +132,35 @@ class Theme:
         With `a`, an RGBA tuple. `on` names the role of what it is drawn on ('dark', 'surface', 'accent'...):
         when the theme makes the two too alike to tell apart (under 3:1), the colour falls back to the text
         colour of that ground (on-dark, on-surface...). A two-colour theme can have accent = dark, for example."""
-        col = self.roles.get(role, tuple(rgb[:3]))
+        col = self._tint(role, rgb) or self.roles.get(role, tuple(rgb[:3]))
         if on is not None and role in self.roles:
-            if isinstance(on, str):
-                if on in self.roles and contrast(col, self.roles[on]) < 3:
+            ground = self.roles.get(on) if isinstance(on, str) else tuple(on[:3])
+            if ground is not None and contrast(col, ground) < 3:
+                # first the same hue, deeper (or lighter on a dark ground), so a colour keeps its meaning and a
+                # logo stays recognisable (a pastel green icon on a white card turns deep green, not ink)
+                shade = deepen(col, ground)
+                if shade is not None:
+                    col = shade
+                elif isinstance(on, str):
                     col = self.roles.get(ON.get(on, 'on-surface'), col)
-            elif contrast(col, on) < 3:  # an actual colour: the theme colour that reads best on it
-                col = max(self.roles.values(), key=lambda v: contrast(v, on))
+                else:  # an actual colour: the theme colour that reads best on it
+                    col = max(self.roles.values(), key=lambda v: contrast(v, on))
         if a is None: a = rgb[3] if len(rgb) > 3 else None
         return tuple(col) + ((int(a),) if a is not None else ())
+
+    def _tint(self, role, rgb):
+        """With tints, a colour keeps its meaning: an effect's saturated original (the stamp's red, Claude's
+        orange, Instagram's blue) becomes the theme's tint nearest to it in hue. Greys and dark or washed-out
+        originals are left to the role. None when nothing applies."""
+        if not self.tints or role not in self.tint_roles:
+            return None
+        h, sat, val = colorsys.rgb_to_hsv(*(x / 255 for x in rgb[:3]))
+        if sat < 0.3 or val < 0.25:
+            return None
+        def dist(t):
+            d = abs(colorsys.rgb_to_hsv(*(x / 255 for x in t))[0] - h)
+            return min(d, 1 - d)
+        return min(self.tints, key=dist)
 
     def r(self, px):
         """A corner radius, scaled by the theme (0 for square corners)."""
@@ -136,7 +173,7 @@ class Theme:
     def f(self, role, neutral):
         """A colour as float32 0..1 for numpy maths: the theme's, or `neutral` (already 0..1) untouched."""
         import numpy as np
-        v = self.roles.get(role)
+        v = self._tint(role, [int(round(x * 255)) for x in list(neutral)[:3]]) or self.roles.get(role)
         return np.float32(neutral) if v is None else np.float32(v) / 255
 
     def font_path(self, kind):
@@ -223,6 +260,10 @@ def use(spec=None, theme_id=None):
         for kind in GROUPS.get(key, (key,)):
             t.fonts[kind] = p
             if spec.get('assi'): t.font_axes[kind] = tuple(spec['assi'])
+    # tints: a palette of hues ("tinte": token names or #hex); the roles in "tinte_ruoli" keep each effect's
+    # colour meaning by snapping its original to the nearest tint (default: the signal roles)
+    t.tints = [tokens[v] if v in tokens else hexrgb(v) for v in cfg.get('tinte', [])]
+    t.tint_roles = set(cfg.get('tinte_ruoli', ['accent', 'accent2', 'success', 'danger']))
     st = cfg.get('stile', {})
     t.radius = float(st.get('raggio', 1.0))
     t.shadows = bool(st.get('ombre', True)); t.glass = bool(st.get('vetro', True))

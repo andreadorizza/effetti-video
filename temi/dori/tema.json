@@ -1,6 +1,6 @@
 {
   "nome": "Dori",
-  "nota": "Il design system di Andrea Dorizza (claude.ai, tipo Design System), esportato così com'è: tokens.json, fonts/, licenses/. Un tema solo, dori: carta bianca, inchiostro, il verde salvia come accento e i suoi pastelli (lilla, rosa, foglia). La mappa dei ruoli sta nel design system, un token fx-* per ruolo. Gli effetti tengono la loro forma originale (angoli, vetro, bagliori, ombre, sfumature) e cambiano solo i colori: schede bianche con testo in inchiostro, pannelli scuri con testo bianco, il salvia sugli accenti. Matrix Sans Screen solo per le scritte grandi; il testo piccolo è in Schibsted Grotesk.",
+  "nota": "Il design system di Andrea Dorizza (claude.ai, tipo Design System), esportato così com'è: tokens.json, fonts/, licenses/. Un tema solo, dori: carta bianca, inchiostro, il verde salvia come accento e i suoi pastelli (lilla, rosa, foglia). La mappa dei ruoli sta nel design system, un token fx-* per ruolo. Gli effetti tengono la loro forma originale (angoli, vetro, bagliori, ombre, sfumature) e cambiano solo i colori: schede bianche con testo in inchiostro, pannelli scuri con testo bianco, il salvia sugli accenti. Ogni effetto tiene il significato dei suoi colori: il suo rosso diventa il corallo, l'arancione di Claude l'albicocca, il blu di Instagram il celeste (le tinte fx-tint-*). Matrix Sans Screen solo per le scritte grandi; il testo piccolo è in Schibsted Grotesk.",
   "design_system": "tokens.json",
   "tema": "dori",
   "colori": {
@@ -46,5 +46,14 @@
     "vetro": true,
     "bagliore": true,
     "sfumature": true
-  }
+  },
+  "tinte": [
+    "fx-tint-red",
+    "fx-tint-orange",
+    "fx-tint-yellow",
+    "fx-tint-green",
+    "fx-tint-blue",
+    "fx-tint-purple",
+    "fx-tint-pink"
+  ]
 }

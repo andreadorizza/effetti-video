@@ -59,6 +59,8 @@ Con il solo `tokens.json` (senza `tema.json`) i ruoli si mappano da soli sui nom
 - **`colori`**: ogni ruolo prende il nome di un token del design system, o un colore `#rrggbb`. Un ruolo che non scrivi resta neutro.
 - **`colori_tema`**: differenze per una variante (qui: in `dark` il testo sopra il video usa `fg`).
 - **`caratteri`**: un file per gruppo. Per un carattere variabile, `{"file": ..., "assi": [peso]}`. Un gruppo che non scrivi resta quello originale. `caratteri_tema` fa lo stesso per una variante.
+- **`tinte`** (facoltativo): una tavolozza di tinte, token o `#rrggbb`, per esempio i pastelli del brand. Nei ruoli di `tinte_ruoli` (di default `accent`, `accent2`, `success`, `danger`) ogni colore originale di un effetto diventa la tinta più vicina come tonalità: il rosso del timbro resta rosso, l'arancione di Claude resta arancione, il blu di Instagram resta blu, nei colori del tuo brand. I grigi restano al ruolo.
+- **Colori troppo chiari**: quando un effetto chiede che un colore si legga sul suo fondo (`on=`) e il tema lo rende troppo simile, il colore si scurisce (o si schiarisce su un fondo scuro) lungo la sua tonalità finché si legge a 3:1; solo un grigio passa al colore del testo. Così un'icona verde pastello su una scheda bianca diventa verde scuro, non nera, e resta riconoscibile.
 - **`stile`**: `raggio` moltiplica gli angoli arrotondati (1 = originali, 0 = angoli vivi); `ombre`, `vetro`, `bagliore` e `sfumature` a `false` tolgono ombre morbide, pannelli di vetro (diventano schede piatte), aloni luminosi e sfumature.
 
 ## I ruoli
