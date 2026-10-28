@@ -40,7 +40,7 @@ Da `draw.py`:
 
 ## Tre regole per stare nel tema e in italiano
 
-1. **Ogni colore passa dal tema:** `P.c('ruolo', (r, g, b))`, con `(r, g, b)` il colore del look neutro. I ruoli sono in `docs/design-system.md`. Mai una tupla RGB nuda per qualcosa che si vede (le ombre nere e il trasparente vanno bene).
+1. **Ogni colore passa dal tema:** `P.c('ruolo', (r, g, b))`, con `(r, g, b)` il colore del look neutro. I ruoli sono in `docs/design-system.md`. Mai una tupla RGB nuda per qualcosa che si vede (le ombre nere e il trasparente vanno bene). Se disegni un segnale su una scheda scura, aggiungi `on='dark'` (o `on='surface'`, o il colore vero del fondo): in un tema a due colori l'accento può essere uguale alla scheda, e così ripiega sul colore del testo di quella scheda invece di sparire.
 2. **Ogni angolo passa dal tema:** `P.r(raggio)` nei `rounded_rectangle` che scrivi tu (`rrect` e `card` lo fanno già). Vetro, aloni e sfumature disegnati a mano: controlla `P.glass`, `P.glow`, `P.gradients`, `P.shadows`.
 3. **Ogni testo predefinito si traduce:** `tr('italiano', 'english')`.
 

@@ -5,6 +5,8 @@ Gli effetti si chiamano in italiano (`orbita`); il nome inglese originale funzio
 I testi predefiniti degli effetti sono scritti `tr('Segui', 'Follow')`: italiano di default,
 `--lingua en` per i testi originali.
 """
+import re
+
 LANG = {'v': 'it'}
 
 
@@ -14,6 +16,24 @@ def set_lang(v):
 
 def tr(it, en):
     return en if LANG['v'] == 'en' else it
+
+
+def num(s):
+    """A number as the language writes it: 197,000 and 26.9K in English, 197.000 and 26,9K in Italian."""
+    return str(s) if LANG['v'] == 'en' else str(s).translate(str.maketrans('.,', ',.'))
+
+
+def decimal_comma(n):
+    """'4,8' (an Italian decimal) -> '4.8'; '197,000' and '1.234,5' are read as thousands + decimals."""
+    n = str(n)
+    if ',' in n and '.' in n:
+        return n.replace('.', '').replace(',', '.') if n.rfind(',') > n.rfind('.') else n.replace(',', '')
+    if ',' in n:
+        head, tail = n.rsplit(',', 1)
+        return n.replace(',', '.') if len(tail) != 3 else n.replace(',', '')
+    if LANG['v'] == 'it' and re.fullmatch(r'\d{1,3}(\.\d{3})+', n):   # Italian thousands: 197.000
+        return n.replace('.', '')
+    return n
 
 
 EFFECTS = {}   # it name -> dict(fn, en, desc, cards)

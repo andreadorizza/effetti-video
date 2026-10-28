@@ -75,6 +75,7 @@ def render(plan, src, dst, stills=None, width=1080, tracking='auto'):
     else: H = width; W = int(round(width * sw / sh / 2)) * 2
     aw = 540 if sw <= sh else int(round(540 * sw / sh / 2)) * 2; ah = int(round(aw * sh / sw / 2)) * 2
     fxs = [Fx(d) for d in plan]
+    if os.path.dirname(os.path.abspath(dst)): os.makedirs(os.path.dirname(os.path.abspath(dst)), exist_ok=True)
     inwin = lambda t: any(f.start - 0.5 <= t < f.end + 0.5 for f in fxs)
     Tracker = pick(tracking)
     print(f'Passo 1: ti cerco nel video ({Tracker.name}, {len(fxs)} effett{"i" if len(fxs) > 1 else "o"})...', flush=True)
@@ -122,7 +123,8 @@ def render(plan, src, dst, stills=None, width=1080, tracking='auto'):
             frame = (np.clip(c.img, 0, 1) * 255 + 0.5).astype(np.uint8)
         if stills is not None:
             out = dst if len(stills) == 1 else dst.replace('.png', f'_{t:.2f}.png')
-            cv2.imwrite(out, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)); saved.append(out); print('salvato', out)
+            if not cv2.imwrite(out, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)): raise SystemExit(f'Non riesco a salvare {out}')
+            saved.append(out); print('salvato', out)
         else:
             enc.stdin.write(frame.tobytes())
             if i % int(fps * 5) == 0: print(f'  {t:5.1f}s / {dur:.1f}s', flush=True)

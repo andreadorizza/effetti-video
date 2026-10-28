@@ -8,21 +8,21 @@ from ..draw import *
          desc='Le tue reel si aprono a ventaglio come una mano di telefoni, sotto un titolo', schede=True)
 def fx_phone_fan(c, e):
     W, H = c.W, c.H; al = fade(c, e)
-    lines = e.o.get('text', '22 effects.|zero editing apps.').split('|')
+    lines = e.o.get('text', tr('22 effetti.|zero app di montaggio.', '22 effects.|zero editing apps.')).split('|')
     S = cached(e, 'sz', lambda: lines_fit(lines, W * 0.84, 'uib', int(W * 0.08)))
     y = max(H * 0.06, c.fy - c.fw * 1.3 - S * 1.3 * len(lines))
     for j, ln in enumerate(lines):
         kj = clamp((c.lt - 0.05 - 0.1 * j) / 0.18); last = j == len(lines) - 1
-        t = cached(e, ('t', j), lambda: text_img(ln, S, 'uib', (16, 16, 18) if last else (255, 255, 255), shadow=0 if last else 9))
-        if last: comp(c, rrect(t.width - S * 0.15, S * 1.22, S * 0.08, (255, 255, 255, 255)), W / 2 - (t.width - S * 0.15) / 2, y, al * kj, guard=True)
+        t = cached(e, ('t', j), lambda: text_img(ln, S, 'uib', P.c('on-surface', (16, 16, 18)) if last else P.c('over', (255, 255, 255)), shadow=0 if last else 9))
+        if last: comp(c, rrect(t.width - S * 0.15, S * 1.22, S * 0.08, P.c('surface', (255, 255, 255), 255)), W / 2 - (t.width - S * 0.15) / 2, y, al * kj, guard=True)
         place(c, t, W / 2, y + S * 0.6, 1, 0, al * kj, guard=True); y += S * 1.3
     pw = int(W * 0.23); ph = int(pw * 2.0)
     def phone(i):
-        im = rrect(pw, ph, pw * 0.16, (14, 14, 16, 255))
+        im = rrect(pw, ph, pw * 0.16, P.c('dark', (14, 14, 16), 255))
         scr = card(vary(e.cards[i % len(e.cards)], i) if e.o.get('images') is None else e.cards[i % len(e.cards)], pw - 10)
         inner = scr.crop(((scr.width - (pw - 10)) // 2, (scr.height - (ph - 10)) // 2 - 6, (scr.width + pw - 10) // 2, (scr.height + ph - 10) // 2 - 6))
         im.alpha_composite(inner, (5, 5))
-        ImageDraw.Draw(im).rounded_rectangle([pw * 0.36, ph * 0.025, pw * 0.64, ph * 0.045], pw * 0.03, fill=(0, 0, 0, 255))
+        ImageDraw.Draw(im).rounded_rectangle([pw * 0.36, ph * 0.025, pw * 0.64, ph * 0.045], P.r(pw * 0.03), fill=P.c('dark', (0, 0, 0), 255))
         return shadowed(im, 14, 8, 120)
     ph_ = cached(e, 'ph', lambda: [phone(i) for i in range(4)])
     cx = W / 2 * 0.5 + c.fx * 0.5; cy = max(c.fy + c.fw * 1.1 + ph / 2, H * 0.62)

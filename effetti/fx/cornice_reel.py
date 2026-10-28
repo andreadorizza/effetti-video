@@ -6,11 +6,11 @@ from ..draw import *
 
 def reel_icons(size):
     s = int(size); im = Image.new('RGBA', (s, int(s * 3.6)), (0, 0, 0, 0)); d = ImageDraw.Draw(im); w = max(3, s // 12)
-    h = heart(s * 0.8, (255, 255, 255)); im.alpha_composite(h, (int(s * 0.1), 0))
-    d.text((s / 2, s * 0.95), '26.9K', font=font('ui', s * 0.24), fill=(255, 255, 255, 255), anchor='mm')
-    d.ellipse([s * 0.15, s * 1.25, s * 0.85, s * 1.95], outline=(255, 255, 255, 255), width=w)
-    d.text((s / 2, s * 2.15), '412', font=font('ui', s * 0.24), fill=(255, 255, 255, 255), anchor='mm')
-    d.polygon([(s * 0.12, s * 2.75), (s * 0.9, s * 2.45), (s * 0.55, s * 3.25), (s * 0.45, s * 2.88)], outline=(255, 255, 255, 255), width=w)
+    h = heart(s * 0.8, P.c('over', (255, 255, 255))); im.alpha_composite(h, (int(s * 0.1), 0))
+    d.text((s / 2, s * 0.95), num('26.9K'), font=font('ui', s * 0.24), fill=P.c('over', (255, 255, 255), 255), anchor='mm')
+    d.ellipse([s * 0.15, s * 1.25, s * 0.85, s * 1.95], outline=P.c('over', (255, 255, 255), 255), width=w)
+    d.text((s / 2, s * 2.15), '412', font=font('ui', s * 0.24), fill=P.c('over', (255, 255, 255), 255), anchor='mm')
+    d.polygon([(s * 0.12, s * 2.75), (s * 0.9, s * 2.45), (s * 0.55, s * 3.25), (s * 0.45, s * 2.88)], outline=P.c('over', (255, 255, 255), 255), width=w)
     return im
 
 
@@ -32,5 +32,5 @@ def fx_reel_frame(c, e):
     c.fx, c.fy, c.fw = x0 + c.fx * s, y0 + c.fy * s, c.fw * s
     ic = cached(e, 'ic', lambda: shadowed(reel_icons(c.W * 0.075), 6, 2, 120))
     comp(c, ic, x0 + iw - ic.width - c.W * 0.01, y0 + ih * 0.52, k)
-    hdl = text_img(e.o.get('text', '@your.handle'), c.W * 0.032, 'ui', (255, 255, 255), shadow=4)
+    hdl = text_img(e.o.get('text', tr('@il.tuo.profilo', '@your.handle')), c.W * 0.032, 'ui', P.c('over', (255, 255, 255)), shadow=4)
     comp(c, hdl, x0 + c.W * 0.03, y0 + ih - hdl.height - c.W * 0.04, k)

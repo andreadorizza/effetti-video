@@ -18,15 +18,20 @@ def fx_dot_reveal(c, e):
     small = cv2.resize(pad, (gw, gh), interpolation=cv2.INTER_AREA)
     lum = small @ np.float32([0.299, 0.587, 0.114])
     on = np.clip((p * 1.7 - thr * 0.95) / 0.3, 0, 1)
-    sparkle = 0.75 + 0.25 * np.sin(thr * 40 + c.lt * 18)
-    r = (0.18 + 0.32 * np.sqrt(np.clip(lum, 0, 1))) * cell * on
-    col = rgb(e.o.get('color'), (255, 128, 80))
+    col = rgb(e.o.get('color'), P.c('accent', (255, 128, 80)))
+    bgc = np.float32(rgb(e.o.get('bg'), P.c('ground', (20, 20, 22)))) / 255
+    # dots lighter than the ground grow with the light; darker dots (on a light theme ground) grow with the shadows
+    lw = np.float32([0.299, 0.587, 0.114]); tone = lum if float(np.float32(col) / 255 @ lw) >= float(bgc @ lw) else 1 - lum
+    r = (0.18 + 0.32 * np.sqrt(np.clip(tone, 0, 1))) * cell * on
     q2 = clamp((p - 0.3) / 0.35)
-    dc = np.float32(col) / 255 * (0.55 + 0.6 * lum[..., None]) * sparkle[..., None] * (1 - q2) + np.clip(small * 1.15, 0, 1) * q2
+    if P.glow:  # luminous dots that twinkle
+        sparkle = 0.75 + 0.25 * np.sin(thr * 40 + c.lt * 18)
+        dc = np.float32(col) / 255 * (0.55 + 0.6 * lum[..., None]) * sparkle[..., None] * (1 - q2) + np.clip(small * 1.15, 0, 1) * q2
+    else:  # flat halftone dots in one colour
+        dc = np.float32(col) / 255 * np.ones_like(lum)[..., None] * (1 - q2) + np.clip(small * 1.15, 0, 1) * q2
     R = np.repeat(np.repeat(r, cell, 0), cell, 1)[:H, :W]
     DC = np.repeat(np.repeat(dc, cell, 0), cell, 1)[:H, :W]
     dm = np.clip(R - dist + 0.5, 0, 1)[..., None]
-    bgc = np.float32(rgb(e.o.get('bg'), (20, 20, 22))) / 255
     dots = bgc * (1 - dm) + DC * dm
     q = ease_inout((p - 0.6) / 0.4)
     c.img = dots * (1 - q) + c.img * q

@@ -17,11 +17,11 @@ def fx_broll_split(c, e):
         l, t = (im.width - W) // 2, int((im.height - H * 0.5) * 0.35); im = im.crop((l, t, l + W, t + int(H * 0.5)))
         top = np.asarray(im, np.float32) / 255
         c.img[:sh] = top[int(H * 0.5) - sh:]; c.m[:sh] = 0
-        c.img[max(0, sh - 3):sh + 3] = 1.0
-    tag = cached(e, 'tag', lambda: text_img(e.o.get('text', '4 hrs  →  4 min'), W * 0.06, 'uib', (16, 16, 18)))
+        c.img[max(0, sh - 3):sh + 3] = P.f('over', [1.0, 1.0, 1.0])  # the white seam
+    tag = cached(e, 'tag', lambda: text_img(e.o.get('text', tr('4 ore  →  4 min', '4 hrs  →  4 min')), W * 0.06, 'uib', P.c('on-surface', (16, 16, 18))))
     tw, th = int(tag.width + W * 0.11), int(tag.height * 1.25)
     st = Image.new('RGBA', (tw, th), (0, 0, 0, 0)); d = ImageDraw.Draw(st); n = th * 0.5
-    d.polygon([(0, th / 2), (n, 0), (tw, 0), (tw, th), (n, th)], fill=(255, 255, 255, 255))
-    d.ellipse([n * 0.55, th / 2 - n * 0.16, n * 0.87, th / 2 + n * 0.16], fill=(200, 200, 205, 255))
+    d.polygon([(0, th / 2), (n, 0), (tw, 0), (tw, th), (n, th)], fill=P.c('surface', (255, 255, 255), 255))
+    d.ellipse([n * 0.55, th / 2 - n * 0.16, n * 0.87, th / 2 + n * 0.16], fill=P.c('line', (200, 200, 205), 255))
     st.alpha_composite(tag, (int(n * 1.05), (th - tag.height) // 2))
     place(c, shadowed(st, 12, 6, 110), W * 0.66, H * 0.39 * k + H * 0.0, 0.5 + 0.5 * pop(c, 0.3), 8, al * clamp((c.lt - 0.3) / 0.08))

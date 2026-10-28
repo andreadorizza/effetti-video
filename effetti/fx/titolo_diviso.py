@@ -10,9 +10,10 @@ def fx_split_headline(c, e):
     k = ease_out(c.lt / 0.38) * clamp((e.d - c.lt) / 0.25)
     ch = c.H * float(e.o.get('height', 0.36))
     shift(c, ch * float(e.o.get('push', 0.72)) * k)
-    top = ch * k; W = c.W; col = rgb(e.o.get('color'), GREEN)
-    lay = Image.new('RGBA', (W, int(ch)), (244, 242, 236, 255)); d = ImageDraw.Draw(lay)
-    lines = e.o.get('text', 'Claude|edits my|reels.').split('|'); hl = e.o.get('hl', 'edits')
+    top = ch * k; W = c.W; col = rgb(e.o.get('color'), P.c('accent', GREEN))
+    ink, on_col = P.c('on-surface', (20, 20, 22)), P.c('on-accent', (255, 255, 255))
+    lay = Image.new('RGBA', (W, int(ch)), P.c('surface', (244, 242, 236), 255)); d = ImageDraw.Draw(lay)
+    lines = e.o.get('text', tr('Claude|monta le|mie reel.', 'Claude|edits my|reels.')).split('|'); hl = e.o.get('hl', tr('monta', 'edits'))
     S = cached(e, 'sz', lambda: lines_fit(lines, W * 0.84, 'uib', int(W * 0.135))); f = font('uib', S)
     x0, y0 = W * 0.07, ch * 0.13
     for j, ln in enumerate(lines):
@@ -25,14 +26,14 @@ def fx_split_headline(c, e):
             wl = f.getlength(core)
             if core == hl:
                 hk = ease_out((c.lt - 0.42) / 0.22); pad = S * 0.12
-                if hk > 0: d.rounded_rectangle([x - pad, y + S * 0.02, x - pad + (wl + 2 * pad) * hk, y + S * 1.1], S * 0.16, fill=col + (a,))
-                d.text((x, y), core, font=f, fill=((255, 255, 255, a) if hk > 0.55 else (20, 20, 22, a)))
-            else: d.text((x, y), core, font=f, fill=(20, 20, 22, a))
+                if hk > 0: d.rounded_rectangle([x - pad, y + S * 0.02, x - pad + (wl + 2 * pad) * hk, y + S * 1.1], P.r(S * 0.16), fill=col + (a,))
+                d.text((x, y), core, font=f, fill=(on_col + (a,) if hk > 0.55 else ink + (a,)))
+            else: d.text((x, y), core, font=f, fill=ink + (a,))
             x += wl
             if tail: d.text((x, y), tail, font=f, fill=col + (a,)); x += f.getlength(tail)
             x += f.getlength(' ') + (S * 0.12 if core == hl else 0)
     d.rectangle([0, ch - max(5, W // 180), W, ch], fill=col + (255,))
     comp(c, lay, 0, top - ch)
-    pt = text_img(e.o.get('pill', 'in seconds ↗'), W * 0.034, 'uib', (255, 255, 255))
+    pt = text_img(e.o.get('pill', tr('in pochi secondi ↗', 'in seconds ↗')), W * 0.034, 'uib', on_col)
     pill = rrect(pt.width + W * 0.02, pt.height * 0.95, pt.height * 0.47, col + (255,)); pill.alpha_composite(pt, (int(W * 0.01), int(-pt.height * 0.025)))
     place(c, shadowed(pill, 10, 4, 80), W * 0.93 - pill.width / 2, top + pill.height * 0.95, 0.6 + 0.4 * pop(c, 0.62), 0, clamp((c.lt - 0.62) / 0.1) * k, guard=True)

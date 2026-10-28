@@ -7,7 +7,8 @@ from ..draw import *
 @effetto('scarabocchi', en='scribble', alias=('pennarello', 'scribble'),
          desc='Scarabocchi a pennarello si disegnano da soli intorno a te')
 def fx_scribble(c, e):
-    col = rgb(e.o.get('color'), YELLOW) + (255,); wd = max(6, c.W // 130)
+    col = cached(e, 'col', lambda: rgb(e.o.get('color'), P.c('accent2', YELLOW, on=footage(c, c.fx - c.fw * 1.4, c.fy - c.fw * 1.6, c.fx + c.fw * 1.4, c.fy + c.fw * 1.6)))) + (255,)
+    wd = max(6, c.W // 130)  # a marker straight on the footage: falls back to what reads there
     lay = Image.new('RGBA', (c.W, c.H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     rx, ry = c.fw * 1.0, c.fw * 1.3
     angs = np.linspace(-1.9, -1.9 + 2 * math.pi * 1.08, 70)
@@ -25,5 +26,5 @@ def fx_scribble(c, e):
     al = clamp((e.d - c.lt) / 0.2)
     comp(c, to_np(lay), 0, 0, al)
     if c.lt > 0.7:
-        lab = text_img(e.o.get('text', 'me!'), c.W * 0.075, 'hand', col[:3], shadow=6)
+        lab = text_img(e.o.get('text', tr('io!', 'me!')), c.W * 0.075, 'hand', col[:3], shadow=6)
         place(c, lab, lx, ly - lab.height * 0.15, 0.7 + 0.3 * ease_back((c.lt - 0.7) / 0.3), 8, al)

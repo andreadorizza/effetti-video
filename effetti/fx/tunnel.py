@@ -15,6 +15,7 @@ def fx_rabbit_hole(c, e):
         a = np.ones((c.H, c.W), np.float32); b = np.zeros((c.H, c.W), np.float32); t = max(4, c.W // 120)
         b[:t] = b[-t:] = 1; b[:, :t] = b[:, -t:] = 1; _rect[(c.W, c.H)] = (a, b)
     ones, border = _rect[(c.W, c.H)]
+    edge = P.f('over', [1.0, 1.0, 1.0])  # the white frame round each smaller copy
     r = float(e.o.get('ratio', 0.62)); z = (c.lt * float(e.o.get('speed', 0.8))) % 1.0
     src = c.img; cx, cy = c.fx, c.fy
     out = None
@@ -29,6 +30,6 @@ def fx_rabbit_hole(c, e):
         a = cv2.warpAffine(ones, M, (c.W, c.H))[..., None] * k
         bd = cv2.warpAffine(border, M, (c.W, c.H))[..., None] * k
         out = out * (1 - a) + L * a
-        out = out * (1 - bd) + bd
+        out = out * (1 - bd) + bd * edge
     m = c.m[..., None] * k  # you stay in front while the room tunnels behind you
     c.img = out * (1 - m) + src * m

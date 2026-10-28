@@ -9,7 +9,7 @@ from ..draw import *
 def fx_led_sign(c, e):
     k = ramp(c, e, 0.2, 0.2)
     face_cam(c, 1 + (float(e.o.get('push', 1.08)) - 1) * ease_inout(c.lt / e.d), 0.42)
-    lines = e.o.get('text', 'CLAUDE').upper().split('|'); col = np.float32(rgb(e.o.get('color'), (255, 146, 48))) / 255
+    lines = e.o.get('text', 'CLAUDE').upper().split('|'); col = np.float32(rgb(e.o.get('color'), P.c('over', (255, 146, 48)))) / 255
     def setup():
         mats = []
         for s in lines:
@@ -32,8 +32,9 @@ def fx_led_sign(c, e):
     flick = 0.82 + 0.18 * np.sin(rnd * 50 + c.lt * 30)
     b = np.maximum(lit * flick, 0.09)
     pan = np.kron(b, dot)[..., None] * col
-    glow = cv2.GaussianBlur(pan, (0, 0), cell * 0.9)
-    pan = np.clip(pan + glow * 1.6, 0, 1)
+    if P.glow:  # the light bleeding off the bulbs
+        glow = cv2.GaussianBlur(pan, (0, 0), cell * 0.9)
+        pan = np.clip(pan + glow * 1.6, 0, 1)
     ph, pw = pan.shape[:2]; x0 = int(c.W / 2 - pw / 2)
     y0 = int(max(c.H * 0.03, c.fy - c.fw * 0.75 - ph))
     xx, yy = grid(c)

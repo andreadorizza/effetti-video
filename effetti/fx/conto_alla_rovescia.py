@@ -12,8 +12,8 @@ def fx_countdown(c, e):
     f = clamp((c.lt - i * seg) / 0.3) if i > 0 else 1.0
     tw, th = int(c.W * 0.3), int(c.W * 0.38)
     def half(num, top):
-        im = rrect(tw, th, tw * 0.1, (30, 30, 34, 255)); d = ImageDraw.Draw(im)
-        d.text((tw / 2, th / 2), str(num), font=font('bold', th * 0.62), fill=CREAM + (255,), anchor='mm')
+        im = rrect(tw, th, tw * 0.1, P.c('dark', (30, 30, 34), 255)); d = ImageDraw.Draw(im)
+        d.text((tw / 2, th / 2), str(num), font=font('bold', th * 0.62), fill=P.c('on-dark', CREAM, 255), anchor='mm')
         return im.crop((0, 0, tw, th // 2)) if top else im.crop((0, th // 2, tw, th))
     hv = cached(e, 'h', lambda: {(n, t): half(n, t) for n in range(0, n0 + 2) for t in (True, False)})
     im = Image.new('RGBA', (tw, th), (0, 0, 0, 0))

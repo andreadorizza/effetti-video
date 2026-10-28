@@ -4,24 +4,28 @@ By Vibha Ramprakash (MIT), from claude-video-effects; ported to effetti-video.""
 from ..draw import *
 
 
-def star(size, color=(255, 244, 222)):
-    """A 4-point sparkle with a soft glow."""
+def star(size, color=None):
+    """A 4-point sparkle with a soft glow (no glow when the theme has none)."""
+    color = P.c('over', (255, 244, 222)) if color is None else color
     s = max(8, int(size)); h = s / 2; t = s * 0.075
     im = Image.new('RGBA', (s, s), (0, 0, 0, 0))
     ImageDraw.Draw(im).polygon([(h, s * 0.02), (h + t, h - t), (s * 0.98, h), (h + t, h + t), (h, s * 0.98), (h - t, h + t), (s * 0.02, h), (h - t, h - t)], fill=tuple(color) + (255,))
-    g = im.filter(ImageFilter.GaussianBlur(s * 0.07)); out = Image.alpha_composite(g, g); out.alpha_composite(im)
-    r = s * 0.07; ImageDraw.Draw(out).ellipse([h - r, h - r, h + r, h + r], fill=(255, 255, 255, 255))
+    if P.glow: g = im.filter(ImageFilter.GaussianBlur(s * 0.07)); out = Image.alpha_composite(g, g); out.alpha_composite(im)
+    else: out = im.copy()
+    r = s * 0.07; ImageDraw.Draw(out).ellipse([h - r, h - r, h + r, h + r], fill=P.c('over', (255, 255, 255), 255))
     return out
 
 
 def gradient_text(s, size, kind, top, bot, glow=None):
-    """Text filled with a vertical colour gradient (gold, chrome...), with an optional glow."""
+    """Text filled with a vertical colour gradient (gold, chrome...), with an optional glow.
+    A theme without gradients fills it flat with `top`; one without glow drops the glow (same size)."""
+    if not P.gradients: bot = top
     f = font(kind, size); bb = f.getbbox(s); pad = int(size * 0.25 + (glow[1] * 2.5 if glow else 0))
     w, h = bb[2] - bb[0] + 2 * pad, bb[3] - bb[1] + 2 * pad
     m = Image.new('L', (w, h), 0); ImageDraw.Draw(m).text((pad - bb[0], pad - bb[1]), s, font=f, fill=255)
     g = np.linspace(0, 1, h)[:, None, None]; col = np.float32(top) * (1 - g) + np.float32(bot) * g
     im = Image.fromarray(np.dstack([np.broadcast_to(col, (h, w, 3)).astype(np.uint8), np.asarray(m)]), 'RGBA')
-    if glow:
+    if glow and P.glow:
         gl = Image.new('RGBA', (w, h), tuple(glow[0]) + (0,)); gl.putalpha(m.filter(ImageFilter.GaussianBlur(glow[1])))
         im = Image.alpha_composite(Image.alpha_composite(gl, gl), im)
     return im
@@ -30,7 +34,7 @@ def gradient_text(s, size, kind, top, bot, glow=None):
 def spotlight_sparkle(c, e):
     k = ramp(c, e, 0.25, 0.2); W, H = c.W, c.H
     face_cam(c, 1 + (float(e.o.get('push', 1.12)) - 1) * ease_inout(c.lt / e.d), 0.46)
-    gold = np.float32(rgb(e.o.get('color'), (255, 190, 128))) / 255
+    gold = np.float32(rgb(e.o.get('color'), P.c('accent2', (255, 190, 128)))) / 255
     xx, yy = grid(c)
     d = ((xx - c.fx) / (W * 0.55)) ** 2 + ((yy - (c.fy + H * 0.15)) / (H * 0.5)) ** 2
     pool = np.clip(1 - d, 0, 1) ** 1.5
@@ -40,18 +44,22 @@ def spotlight_sparkle(c, e):
     ang = np.arctan2(sy - oy, sx - ox); rad = np.hypot(sx - ox, sy - oy)
     rays = (0.5 + 0.5 * np.cos(16 * ang + c.lt * 0.9)) ** 5 * np.exp(-rad / (H * 0.42)) + 0.9 * np.exp(-(rad / (H * 0.2)) ** 2)
     rays = cv2.resize(rays.astype(np.float32), (W, H), interpolation=cv2.INTER_LINEAR)
-    halo = np.clip(cv2.GaussianBlur(c.m, (0, 0), W * 0.012) * 1.6 - c.m, 0, 1)
-    c.img += (rays * 0.32 + halo * 0.7)[..., None] * gold * k * (1 - c.m[..., None])
+    light = rays * 0.32
+    if P.glow:  # the rim of light around you
+        halo = np.clip(cv2.GaussianBlur(c.m, (0, 0), W * 0.012) * 1.6 - c.m, 0, 1)
+        light = light + halo * 0.7
+    c.img += light[..., None] * gold * k * (1 - c.m[..., None])
     word = e.o.get('text', 'CLAUDE')
     def wimg():
         size = int(H * 0.2)
         while size > 20 and font('didonei', size).getlength(word) > W * 0.86: size = int(size * 0.94)
-        im = gradient_text(word, size, 'didonei', (255, 255, 250), (255, 200, 130), glow=(tuple(int(v * 255) for v in gold), size * 0.06))
+        im = gradient_text(word, size, 'didonei', P.c('over', (255, 255, 250)), P.c('accent2', (255, 200, 130)), glow=(tuple(int(v * 255) for v in gold), size * 0.06))
         im = shadowed(im, int(size * 0.05), 0, 200)
         return np.asarray(im, np.float32) / 255
     wa = cached(e, 'w', wimg); wh, ww = wa.shape[:2]
     band = np.exp(-(((np.arange(ww)[None, :] + np.arange(wh)[:, None] * 0.5) - (-0.3 + 1.6 * clamp((c.lt - 0.25) / 0.9)) * ww * 1.3) / (ww * 0.07)) ** 2)
-    w2 = wa.copy(); w2[..., :3] = np.clip(w2[..., :3] + band[..., None] * 0.9, 0, 1)
+    w2 = wa.copy()
+    if P.glow: w2[..., :3] = np.clip(w2[..., :3] + band[..., None] * 0.9, 0, 1)  # the shine sweeping across
     s = 1.08 - 0.08 * ease_out(c.lt / 0.5)
     im = Image.fromarray((w2 * 255).astype(np.uint8), 'RGBA')
     place(c, im, W / 2, max(wh * 0.5 + H * 0.06, c.fy - c.fw * 1.05 - wh * 0.28), s, 0, k, behind=True)
@@ -78,7 +86,7 @@ def fx_spotlight(c, e):
     bright = 1 - k * (1 - (0.2 + 0.45 * pool))
     f = bright * (1 - c.m) + c.m * (1 + 0.04 * k)
     if e.o.get('text'):
-        word = e.o['text']; col = rgb(e.o.get('color'), PEACH)
+        word = e.o['text']; col = rgb(e.o.get('color'), P.c('over', PEACH))
         im = cached(e, 'w', lambda: fit_text(word, c.W * 0.9, e.o.get('font', 'serif'), fill=col, glow=(col, 26)))
         c.img *= f[..., None]
         place(c, im, c.W / 2, c.fy - c.fw * 1.1, alpha=k, behind=True)

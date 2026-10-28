@@ -17,7 +17,7 @@ import cv2
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 from .theme import P, ROOT, FONT, WGHT, covers
-from .i18n import tr, effetto
+from .i18n import tr, effetto, num, decimal_comma
 
 # The neutral palette. Effects take colours through P.c(role, neutral), so a theme can replace them.
 CREAM, INK, PEACH, YELLOW = (244, 233, 216), (22, 22, 24), (255, 183, 165), (255, 214, 10)
@@ -227,6 +227,15 @@ def vary(im, i):
     kind = ('pop', 'bw', 'warm', 'cool', 'moody')[i % 5]
     a = np.asarray(im.convert('RGB'), np.float32) / 255
     return Image.fromarray((grade(a, kind) * 255).astype(np.uint8))
+
+
+def footage(c, x0=0, y0=0, x1=None, y1=None):
+    """The mean colour of the frame inside a box, as 0..255 RGB. Pass it as P.c(role, neutral, on=footage(...))
+    for a mark drawn straight on the video: a theme colour too close to what is underneath falls back to the
+    theme colour that reads best there."""
+    x0, y0 = int(clamp(x0, 0, c.W - 1)), int(clamp(y0, 0, c.H - 1))
+    x1, y1 = int(clamp(c.W if x1 is None else x1, x0 + 1, c.W)), int(clamp(c.H if y1 is None else y1, y0 + 1, c.H))
+    return tuple(int(v * 255) for v in c.img[y0:y1:4, x0:x1:4].reshape(-1, 3).mean(0))
 
 
 def cached(e, key, fn):

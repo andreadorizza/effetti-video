@@ -73,6 +73,20 @@ WGHT = {'ui': (24, 640), 'uim': (24, 540), 'uib': (32, 860), 'mont': (700,), 'mo
         'didone': (500,), 'didoneb': (800,), 'didonei': (500,)}
 
 
+# The text colour of each ground, for P.c(..., on=ground)
+ON = {'dark': 'on-dark', 'surface': 'on-surface', 'paper': 'on-surface', 'ground': 'on-surface', 'accent': 'on-accent'}
+
+
+def contrast(a, b):
+    """WCAG contrast ratio between two RGB colours (1 to 21)."""
+    def lum(c):
+        c = [x / 255 for x in c[:3]]
+        c = [x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+    la, lb = sorted((lum(a), lum(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
 def hexrgb(v):
     """'#rgb', '#rrggbb' or '#rrggbbaa' (or a list) -> (r, g, b)."""
     if isinstance(v, (list, tuple)): return tuple(int(x) for x in v[:3])
@@ -96,10 +110,18 @@ class Theme:
     @property
     def neutral(self): return not self.roles
 
-    def c(self, role, rgb, a=None):
+    def c(self, role, rgb, a=None, on=None):
         """The colour of `role`, or `rgb` (its neutral value) when the theme leaves the role alone.
-        With `a`, an RGBA tuple."""
+        With `a`, an RGBA tuple. `on` names the role of what it is drawn on ('dark', 'surface', 'accent'...):
+        when the theme makes the two too alike to tell apart (under 3:1), the colour falls back to the text
+        colour of that ground (on-dark, on-surface...). A two-colour theme can have accent = dark, for example."""
         col = self.roles.get(role, tuple(rgb[:3]))
+        if on is not None and role in self.roles:
+            if isinstance(on, str):
+                if on in self.roles and contrast(col, self.roles[on]) < 3:
+                    col = self.roles.get(ON.get(on, 'on-surface'), col)
+            elif contrast(col, on) < 3:  # an actual colour: the theme colour that reads best on it
+                col = max(self.roles.values(), key=lambda v: contrast(v, on))
         if a is None: a = rgb[3] if len(rgb) > 3 else None
         return tuple(col) + ((int(a),) if a is not None else ())
 

@@ -16,11 +16,11 @@ def fx_swipe(c, e):
     c.img = c.img * (1 - a) + after * a
     hy = c.H * 0.62; hx = sp * c.W + 0.22 * (hy - c.H / 2)
     edge = np.clip(1 - np.abs(xx - line) / 3.5, 0, 1)[..., None]
-    c.img = c.img * (1 - edge) + edge
+    c.img = c.img * (1 - edge) + edge * P.f('over', [1.0, 1.0, 1.0])  # the white line
     r = int(c.W * 0.035); h = Image.new('RGBA', (2 * r + 4, 2 * r + 4), (0, 0, 0, 0)); d = ImageDraw.Draw(h)
-    d.ellipse([2, 2, 2 * r + 2, 2 * r + 2], fill=(255, 255, 255, 255))
-    d.text((r + 2, r + 2), '< >', font=font('mono', r * 0.7), fill=INK + (255,), anchor='mm')
+    d.ellipse([2, 2, 2 * r + 2, 2 * r + 2], fill=P.c('surface', (255, 255, 255), 255))
+    d.text((r + 2, r + 2), '< >', font=font('mono', r * 0.7), fill=P.c('on-surface', INK, 255), anchor='mm')
     place(c, shadowed(h, 8, 4, 110), hx, hy)
-    for lab, x in (('before', 0.14), ('after', 0.86)):
-        t = text_img(lab, c.W * 0.03, 'serif', INK); pill = rrect(t.width + 16, t.height, t.height / 2, (255, 255, 255, 225))
+    for lab, x in ((tr('prima', 'before'), 0.14), (tr('dopo', 'after'), 0.86)):
+        t = text_img(lab, c.W * 0.03, 'serif', P.c('on-surface', INK)); pill = rrect(t.width + 16, t.height, t.height / 2, P.c('surface', (255, 255, 255), 225))
         pill.alpha_composite(t, (8, 0)); place(c, pill, c.W * x, c.H * 0.88)

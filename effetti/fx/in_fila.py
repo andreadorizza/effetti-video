@@ -7,18 +7,24 @@ from ..draw import *
 @effetto('in-fila', en='lineup', alias=('fila', 'lineup', 'the-lineup'),
          desc='Tessere numerate si aprono ad arco sopra la testa')
 def fx_lineup(c, e):
-    names = e.o.get('text', '|'.join(NAMES)).split('|')
+    names = e.o.get('text', '|'.join(tr(NOMI, NAMES))).split('|')
     tw = int(c.W * 0.105)
     def tile(i, name):
-        im = rrect(tw, int(tw * 1.25), tw * 0.16, (24, 24, 28, 225), (255, 255, 255, 60), 2)
+        im = rrect(tw, int(tw * 1.25), tw * 0.16, P.c('dark', (24, 24, 28), 225), P.c('line', (255, 255, 255), 60), 2)
         d = ImageDraw.Draw(im)
-        num = text_img(f'{i + 1:02d}', tw * 0.42, 'serif', CREAM)
+        num = text_img(f'{i + 1:02d}', tw * 0.42, 'serif', P.c('on-dark', CREAM))
         im.alpha_composite(num, ((tw - num.width) // 2, int(tw * 0.04)))
         words = name.split(' ')
         lines = [' '.join(words[:len(words) // 2 or 1]), ' '.join(words[len(words) // 2 or 1:])] if len(name) > 10 else [name]
-        f = font('ui', tw * 0.15)
-        for j, ln in enumerate([l for l in lines if l]):
-            d.text((tw / 2, tw * (0.78 + 0.19 * j)), ln, font=f, fill=(255, 255, 255, 235), anchor='mm')
+        lines = [l for l in lines if l]
+        fs = tw * 0.15; f = fontfor('ui', fs, name); lim = tw * 0.84
+        if max((f.getlength(l) for l in lines), default=0) > lim:  # longer names (the Italian ones): break where both lines fit best, then shrink
+            if len(words) > 1:
+                j = min(range(1, len(words)), key=lambda j: max(f.getlength(' '.join(words[:j])), f.getlength(' '.join(words[j:]))))
+                lines = [' '.join(words[:j]), ' '.join(words[j:])]
+            while fs > 6 and max((f.getlength(l) for l in lines), default=0) > lim: fs *= 0.94; f = fontfor('ui', fs, name)
+        for j, ln in enumerate(lines):
+            d.text((tw / 2, tw * (0.78 + 0.19 * j)), ln, font=f, fill=P.c('on-dark', (255, 255, 255), 235), anchor='mm')
         return shadowed(im, 8, 5, 90)
     tiles = cached(e, 'tiles', lambda: [tile(i, n) for i, n in enumerate(names)])
     n = len(tiles); outer = math.ceil(n / 2 + 0.5); inner = n - outer
