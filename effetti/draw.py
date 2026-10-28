@@ -323,6 +323,14 @@ def glass(c, w, h, r, cx, cy, amt=0.22, tint=(255, 255, 255), blur=None, alpha=2
     return im
 
 
+def on_glass(neutral, a=None):
+    """Text and marks on a glass() panel. With glass on, the panel is see-through over the footage, so they
+    take 'over'; without glass it is a flat surface card, so they take 'on-surface'. Both are white in the
+    neutral look, so this only changes themed renders (a theme with a light surface and ink text turned
+    the type on dark glass black, 2026-10-28)."""
+    return P.c('over' if P.glass else 'on-surface', neutral, a)
+
+
 def face_chip(c, e, size):
     """A round avatar cut from your own face (grabbed once, at the start of the effect)."""
     def grab():

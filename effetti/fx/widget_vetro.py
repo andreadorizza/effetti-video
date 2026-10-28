@@ -39,7 +39,7 @@ def glass_widgets_v1(c, e):
     pre, hi = pill.split('|') if '|' in pill else (pill, '')
     tw = f1.getlength(pre) + f2.getlength(hi); ph = W * 0.105; pw = tw + ph * 0.9; py = c.H * 0.865
     q = glass(c, pw, ph, ph / 2, W / 2, py, amt=0.16, tint=(70, 70, 76)); d = ImageDraw.Draw(q)
-    d.text(((pw - tw) / 2, ph / 2), pre, font=f1, fill=P.c('on-surface', (255, 255, 255), 255), anchor='lm')
+    d.text(((pw - tw) / 2, ph / 2), pre, font=f1, fill=on_glass((255, 255, 255), 255), anchor='lm')
     d.text(((pw - tw) / 2 + f1.getlength(pre), ph / 2), hi, font=f2, fill=P.c('accent', (255, 176, 146), 255), anchor='lm')
     place(c, shadowed(q, 14, 6, 70), W / 2, py, 0.7 + 0.3 * pop(c, 0.4), 0, al * clamp((c.lt - 0.4) / 0.1), guard=True)
 
@@ -50,7 +50,7 @@ def glass_widgets_v2(c, e):
     k0 = ramp(c, e, 0.3, 0)
     if e.o.get('grade', 'warm') != 'none': c.img = c.img * (1 - 0.6 * k0) + grade(c.img, e.o.get('grade', 'warm')) * 0.6 * k0
     al = fade(c, e); gd = float(e.o.get('dark', 0.22))
-    white = P.c('on-dark' if gd >= 0.3 else 'on-surface', (255, 255, 255))   # text and marks on the glass (a card without glass)
+    white = P.c('on-dark', (255, 255, 255)) if gd >= 0.3 else on_glass((255, 255, 255))   # text and marks on the glass (a card without glass)
     track = P.c('line', (255, 255, 255))
     def bob(i): return 6 * u * math.sin(2 * math.pi * (c.lt * 0.55 + i * 0.17))
     def show(im, x, y, i, front=False):
@@ -91,7 +91,7 @@ def glass_widgets_v2(c, e):
     di = ImageDraw.Draw(inn); iw, ih = inn.size
     for j in range(3): di.ellipse([14 * u + j * 16 * u, 14 * u, 24 * u + j * 16 * u, 24 * u], fill=(P.c('danger', (255, 95, 87)), P.c('accent2', (255, 189, 46)), P.c('success', (40, 200, 64)))[j] + (255,))
     di.text((16 * u, 40 * u), tr('Reel migliori', 'Top reels'), font=font('uib', 26 * u), fill=P.c('on-surface', (24, 22, 26), 255))
-    di.text((16 * u, 72 * u), '197K', font=font('anton', 44 * u), fill=P.c('accent', (200, 85, 61), 255))
+    di.text((16 * u, 72 * u), '197K', font=font('anton', 44 * u), fill=P.c('accent', (200, 85, 61), 255, on='surface'))
     vals = [197, 140, 124, 83, 50, 40, 38]; gx0, gx1, gy1 = 16 * u, iw - 16 * u, ih - 18 * u; bwid = (gx1 - gx0) / 7 * 0.66
     for j, v in enumerate(vals):
         q = ease_out((c.lt - 0.35 - 0.05 * j) / 0.4); hh = (ih * 0.42) * v / 197 * q; x0 = gx0 + (gx1 - gx0) * j / 7
@@ -142,7 +142,7 @@ def glass_widgets_v2(c, e):
     f1, f2 = font('uim', W * 0.045), font('uib', W * 0.045); pre, hi = tr('Montato con ', 'Edited by '), 'Claude'
     tw = f1.getlength(pre) + f2.getlength(hi); ph = W * 0.105; pw = tw + ph * 0.9; py = H * 0.875
     q = glass(c, pw, ph, ph / 2, W / 2, py, amt=0.16, tint=(70, 70, 76)); d = ImageDraw.Draw(q)
-    d.text(((pw - tw) / 2, ph / 2), pre, font=f1, fill=P.c('on-surface', (255, 255, 255), 255), anchor='lm')
+    d.text(((pw - tw) / 2, ph / 2), pre, font=f1, fill=on_glass((255, 255, 255), 255), anchor='lm')
     d.text(((pw - tw) / 2 + f1.getlength(pre), ph / 2), hi, font=f2, fill=P.c('accent', (255, 176, 146), 255), anchor='lm')
     show(shadowed(q, 14, 6, 70), W / 2, py, 7, front=True)
 

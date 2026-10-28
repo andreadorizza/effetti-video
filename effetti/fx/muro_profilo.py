@@ -22,7 +22,7 @@ def fx_profile_wall(c, e):
     # a dark glass card; a theme without glass gets glass()'s flat surface card, so the type on it is on-surface
     g = glass(c, cw, chh, chh * 0.18, W / 2, cy, amt=0.5, tint=(12, 12, 14)); d = ImageDraw.Draw(g)
     target = int(e.o.get('count', 197000)); n = int(target * ease_out((c.lt - 0.2) / 0.8))
-    swap = clamp((c.lt - 1.15) / 0.2); ink = P.c('on-surface', (255, 255, 255))
+    swap = clamp((c.lt - 1.15) / 0.2); ink = on_glass((255, 255, 255))
     if swap < 1: d.text((cw / 2, chh * 0.33), num(f'{n:,}'), font=font('uib', chh * 0.3), fill=ink + (int(255 * (1 - swap)),), anchor='mm')
     if swap > 0:
         lab = e.o.get('label', tr('visualizzazioni', 'views')); fl = fontfor('uib', chh * 0.3, lab)
@@ -35,5 +35,5 @@ def fx_profile_wall(c, e):
     on = c.lt >= e.d * 0.7
     d.rounded_rectangle([cw - chh * 0.95, chh * 0.62, cw - chh * 0.14, chh * 0.86], P.r(chh * 0.12), fill=(P.c('line', (60, 60, 66), 255) if on else P.c('accent', (255, 255, 255), 255)))
     d.text((cw - chh * 0.545, chh * 0.74), tr('Segui già', 'Following') if on else tr('Segui', 'Follow'), font=font('uib', chh * 0.08),
-           fill=(P.c('on-surface', (255, 255, 255), 255) if on else P.c('on-accent', (16, 16, 18), 255)), anchor='mm')
+           fill=(on_glass((255, 255, 255), 255) if on else P.c('on-accent', (16, 16, 18), 255)), anchor='mm')
     place(c, g, W / 2, cy + (1 - ease_out((c.lt - 0.05) / 0.3)) * H * 0.1, 1, 0, al * clamp((c.lt - 0.05) / 0.12), guard=True)

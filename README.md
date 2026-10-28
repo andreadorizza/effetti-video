@@ -118,7 +118,7 @@ Se hai un design system fatto con Claude, dai il link a Claude e scrivi: *"usa i
 /effetti da-fare dal 2 al 6, col tema dori
 ```
 
-Come funziona e come si scrive un tema a mano: [docs/design-system.md](docs/design-system.md). C'è un esempio completo, `temi/dori`, il mio design system. Ha un tema solo, `dori`: schede verde salvia col testo nero, il nero come colore di accento, il testo sul video in salvia e Matrix Sans Screen ovunque.
+Come funziona e come si scrive un tema a mano: [docs/design-system.md](docs/design-system.md). C'è un esempio completo, `temi/dori`, il mio design system. Ha un tema solo, `dori`: gli effetti tengono la loro forma e cambiano solo i colori, con schede bianche, il verde salvia e i suoi pastelli sugli accenti, e Matrix Sans Screen solo per le scritte grandi.
 
 ## Aggiungere effetti
 

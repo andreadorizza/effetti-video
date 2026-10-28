@@ -55,7 +55,7 @@ def glass_graph(c, cx, cy, k, prog, label, value, kind, scale=1.0):
     lab, big = fontfor('uim', 44 * v, label.upper()), font('uib', 170 * v)
     num, suf, dec = split_num(value); txt = num_text(f'{num * ease_out(prog):.{dec}f}') + suf
     xx = o + 64 * v
-    ink = P.c('on-surface', (255, 255, 255))   # on the glass (a surface card without glass)
+    ink = on_glass((255, 255, 255))   # on the glass (a surface card without glass)
     for chh in label.upper(): d.text((xx, o + 64 * v), chh, font=lab, fill=ink + (235,)); xx += lab.getlength(chh) + 9 * v
     d.text((o + w - 70 * v - big.getlength(txt), o + 40 * v), txt, font=big, fill=ink + (255,))
     gx0, gx1, gy0, gy1 = o + 64 * v, o + w - 64 * v, o + 290 * v, o + h - 80 * v

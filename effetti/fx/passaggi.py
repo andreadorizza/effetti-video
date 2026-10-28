@@ -17,7 +17,7 @@ def fx_checklist(c, e):
     span = max(0.4, e.d - 0.55); done_at = [0.3 + span * (i + 1) / n for i in range(n)]
     g = glass(c, cw, chh, 40 * u, W / 2, cy, amt=0.78, tint=(14, 13, 16), blur=int(30 * u)); d = ImageDraw.Draw(g)
     # dark=0, so without glass the panel is a surface card: its text is on-surface
-    ink, grey, spark, ok = P.c('on-surface', (255, 255, 255)), P.c('muted', (170, 170, 176)), P.c('accent', (217, 119, 87)), P.c('success', (52, 199, 89))
+    ink, grey, spark, ok = on_glass((255, 255, 255)), P.c('muted', (170, 170, 176)), P.c('accent', (217, 119, 87)), P.c('success', (52, 199, 89))
     sx, sy = 44 * u, hh / 2
     for a in range(4):
         ang = a * math.pi / 2 + math.pi / 4

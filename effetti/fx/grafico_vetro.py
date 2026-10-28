@@ -92,7 +92,7 @@ def fx_liquid_glass_graph(c, e):
             (np.clip(1 - np.linspace(0, 1, gh) * 2.2, 0, 1)[:, None] * np.ones(gw) * 46).astype(np.uint8)]), 'RGBA'))
         hm = Image.new('L', (gw, gh), 0); ImageDraw.Draw(hm).rounded_rectangle([0, 0, gw - 1, gh - 1], int(P.r(gh * 0.12)), fill=255)
         hl = hi.copy(); hl.putalpha(Image.fromarray(np.minimum(np.asarray(hi)[..., 3], np.asarray(hm)))); im.alpha_composite(hl)
-    ink = P.c('on-surface', (255, 255, 255))   # light glass (a light card without glass)
+    ink = on_glass((255, 255, 255))   # light glass (a light card without glass)
     lay = Image.new('RGBA', (gw, gh), (0, 0, 0, 0)); d = ImageDraw.Draw(lay); pad = gw * 0.07
     g = ease_inout((c.lt - 0.25) / max(0.3, e.d * 0.72))
     lab = e.o.get('text', tr('FIDELIZZAZIONE', 'RETENTION')).upper()

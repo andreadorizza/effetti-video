@@ -15,7 +15,7 @@ def fx_todo(c, e):
     im = rrect(cw, pad * 2 + lh * (len(items) + 1), cw * 0.07, P.c('surface', (250, 248, 242), 235)); d = ImageDraw.Draw(im)
     done = sum(c.lt >= t for t in ticks)
     title = e.o.get('title', tr('DA FARE', 'TO DO')).upper(); count = tr(f'{done} di {len(items)}', f'{done} of {len(items)}')
-    d.text((pad, pad), title, font=fontfor('ui', lh * 0.42, title), fill=P.c('accent2', (200, 140, 20), 255))
+    d.text((pad, pad), title, font=fontfor('ui', lh * 0.42, title), fill=P.c('accent2', (200, 140, 20), 255, on='surface'))
     d.text((cw - pad, pad), count, font=font('ui', lh * 0.36), fill=P.c('muted', (120, 120, 120), 255), anchor='ra')
     ink = P.c('on-surface', INK) + (255,)
     for i, it in enumerate(items):
