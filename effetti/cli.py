@@ -3,7 +3,7 @@
 Un effetto:      python scripts/effetti.py orbita video.mp4 uscita.mp4 --inizio 3.2 --fine 6
 Più effetti:     python scripts/effetti.py --piano piano.json video.mp4 uscita.mp4
 Prova veloce:    python scripts/effetti.py --piano piano.json video.mp4 prova.png --fermo 4.5,15.2
-Con un tema:     ... --tema temi/dori --variante screen
+Con un tema:     ... --tema temi/dori
 Elenco:          python scripts/effetti.py --elenco
 """
 import argparse, json, sys
@@ -40,7 +40,7 @@ def main(argv=None):
     ap.add_argument('--fermo', '--still', dest='still', help='secondi separati da virgole: salva fotogrammi PNG invece del video')
     ap.add_argument('--larghezza', '--width', dest='width', type=int, default=1080, help='lato corto del video (1080, o 2160 per il 4K)')
     ap.add_argument('--tema', '--theme', dest='theme', help='neutro (default), un file tema, una cartella o un tokens.json di un design system')
-    ap.add_argument('--variante', '--variant', dest='variant', help='quale tema del design system (es. screen)')
+    ap.add_argument('--variante', '--variant', dest='variant', help='quale tema del design system (es. dark)')
     ap.add_argument('--lingua', '--lang', dest='lang', default=None, help='it (default) o en, per i testi predefiniti')
     ap.add_argument('--tracciamento', '--tracking', dest='tracking', default='auto', help='auto (default), vision o mediapipe')
     ap.add_argument('--elenco', '--list', dest='list', action='store_true', help='elenca gli effetti')

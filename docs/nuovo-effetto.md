@@ -51,7 +51,7 @@ Se aggiungi un effetto visto altrove, scrivi da dove viene nel docstring del fil
 ```bash
 # il tuo effetto, neutro e con un tema
 .venv/bin/python scripts/effetti.py bolla video.mp4 neutro.png --fermo 1
-.venv/bin/python scripts/effetti.py bolla video.mp4 dori.png --fermo 1 --tema temi/dori --variante raster
+.venv/bin/python scripts/effetti.py bolla video.mp4 dori.png --fermo 1 --tema temi/dori
 
 # i 45 originali disegnano ancora esattamente come quelli di Vibha (serve il suo repo e una clip di almeno 2 minuti)
 .venv/bin/python tests/confronto.py ../claude-video-effects clip.mp4 /tmp/confronto

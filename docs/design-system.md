@@ -3,7 +3,7 @@
 Gli effetti non hanno colori fissi. Ogni colore è un **ruolo** ("la scheda chiara", "il testo sopra il video", "l'evidenziatore"), e un tema dice quale colore dare a ogni ruolo. Senza tema (`neutro`) ogni ruolo tiene il colore originale di Vibha, quindi il look di default è il suo, identico pixel per pixel.
 
 ```bash
-python scripts/effetti.py da-fare video.mp4 uscita.mp4 --tema temi/dori --variante screen
+python scripts/effetti.py da-fare video.mp4 uscita.mp4 --tema temi/dori
 ```
 
 `--tema` accetta:
@@ -90,4 +90,4 @@ Controlla il contrasto delle coppie che contano: `on-surface` su `surface`, `on-
 
 ## L'esempio: temi/dori
 
-Il design system di Andrea Dorizza, esportato com'è da claude.ai: quattro varianti (`screen`, `raster`, `video` per i video, `paper` per il sito), Matrix Sans nei video e Schibsted Grotesk sulla carta, look piatto (angoli vivi, niente ombre, vetro, bagliori o sfumature). Guardalo per vedere una mappa completa.
+Il design system di Andrea Dorizza, esportato com'è da claude.ai. Ha un tema solo, `dori`, con una palette per tutto: carta bianca, inchiostro e il verde salvia. La mappa dei ruoli sta nel design system stesso, un token `fx-*` per ruolo (`fx-surface`, `fx-on-surface`...), e `tema.json` li prende uno a uno. Negli effetti le schede (`surface`, `ground`) sono salvia col testo in inchiostro; il segnale (`accent`, `success`, `danger`) e le schede scure (`dark`) sono inchiostro col salvia sopra; il testo sopra il video (`over`) è salvia; la carta stampata (`paper`) è bianca. Tutti i gruppi di caratteri usano Matrix Sans Screen. Angoli vivi e ombre morbide, niente vetro, bagliori o sfumature. Guardalo per vedere una mappa completa.

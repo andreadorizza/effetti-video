@@ -19,8 +19,7 @@ SLOT = 2.8
 PEAK = {'default': 0.62, 'scontrino': 0.85, 'da-fare': 0.8, 'passaggi': 0.85, 'commento': 0.9, 'segui': 0.85,
         'griglia-profilo': 0.9, 'interruttori': 0.85, 'messaggi': 0.85, 'muro-titoli': 0.9, 'grafico-vetro': 0.85,
         'zoom-spalla': 0.4, 'classifica': 0.9, 'conto-alla-rovescia': 0.5, 'puntini': 0.35, 'muro-profilo': 0.85}
-THEMES = [('neutro', None, None), ('dori · screen', 'temi/dori', 'screen'), ('dori · raster', 'temi/dori', 'raster'),
-          ('dori · video', 'temi/dori', 'video')]
+THEMES = [('neutro', None), ('dori', 'temi/dori')]
 
 ap = argparse.ArgumentParser()
 ap.add_argument('clip'); ap.add_argument('work'); ap.add_argument('--effetto', default='da-fare')
@@ -76,9 +75,9 @@ for k, t in enumerate(tiles):
 # 2. one effect in every theme
 strip_t = 1.0 + SLOT * PEAK.get(a.effetto, PEAK['default'])
 row = []
-for label, theme, variant in THEMES:
-    out = os.path.join(a.work, f't_{variant or "neutro"}.png')
-    extra = ['--tema', theme, '--variante', variant] if theme else []
+for label, theme in THEMES:
+    out = os.path.join(a.work, f't_{label}.png')
+    extra = ['--tema', theme] if theme else []
     run([{'effetto': a.effetto, 'inizio': 1.0, 'fine': 1.0 + SLOT}], [strip_t], out, *extra)
     row.append(tile(out, label))
 strip = Image.new('RGB', (grid.width, th + 2 * gap), (16, 16, 18))

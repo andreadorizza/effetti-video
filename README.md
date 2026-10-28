@@ -4,7 +4,7 @@ Trascini il video in Claude, scrivi `/effetti` e il nome dell'effetto, e non dev
 
 ![I 45 effetti](assets/anteprima.jpg)
 
-*Sotto la griglia c'è `titolo-diviso` col tema neutro e con le tre varianti video del tema `dori`.*
+*Sotto la griglia c'è `titolo-diviso` col tema neutro e col tema `dori`.*
 
 È la versione italiana di [claude-video-effects](https://github.com/Vibha-Ramprakash/claude-video-effects) di [Vibha Ramprakash](https://instagram.com/vibha.in.progress). Gli effetti sono gli stessi 45 e col tema neutro escono identici ai suoi, pixel per pixel. Rispetto all'originale cambia questo:
 
@@ -118,7 +118,7 @@ Se hai un design system fatto con Claude, dai il link a Claude e scrivi: *"usa i
 /effetti da-fare dal 2 al 6, col tema dori
 ```
 
-Come funziona e come si scrive un tema a mano: [docs/design-system.md](docs/design-system.md). C'è un esempio completo, `temi/dori`, il mio design system. Ha quattro varianti: `screen` (verde LCD), `raster` (ambra CRT), `video` (blu televideo) e `paper`.
+Come funziona e come si scrive un tema a mano: [docs/design-system.md](docs/design-system.md). C'è un esempio completo, `temi/dori`, il mio design system. Ha un tema solo, `dori`: schede verde salvia col testo nero, il nero come colore di accento, il testo sul video in salvia e Matrix Sans Screen ovunque.
 
 ## Aggiungere effetti
 

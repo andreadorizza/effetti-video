@@ -11,11 +11,11 @@ tema non definisce resta neutro.
 
 Un tema è un file JSON (vedi docs/design-system.md e temi/):
 
-    {"nome": "Dori · screen",
-     "design_system": "dori/tokens.json", "tema": "screen",
-     "colori": {"surface": "bg", "on-surface": "fg", "accent": "accent", ...},
-     "caratteri": {"display": "dori/fonts/MatrixSansScreen-Regular.ttf", ...},
-     "stile": {"raggio": 0, "ombre": false, "vetro": false, "bagliore": false, "sfumature": false}}
+    {"nome": "Dori",
+     "design_system": "tokens.json", "tema": "dori",
+     "colori": {"surface": "fx-surface", "on-surface": "fx-on-surface", "accent": "fx-accent", ...},
+     "caratteri": {"display": "fonts/MatrixSansScreen-Regular.ttf", ...},
+     "stile": {"raggio": 0, "ombre": true, "vetro": false, "bagliore": false, "sfumature": false}}
 
 `colori` dà a ogni ruolo un token del design system (per nome) o un colore esadecimale.
 Con un design system e senza `colori`, i ruoli si mappano da soli sui nomi di token più comuni.
@@ -211,7 +211,7 @@ def use(spec=None, theme_id=None):
         if role not in ROLES: raise SystemExit(f"Ruolo sconosciuto nel tema: '{role}'. Ruoli: {', '.join(ROLES)}")
         if v is None: continue
         t.roles[role] = tokens[v] if v in tokens else hexrgb(v)
-    # a per-theme override of the colours, e.g. {"colori_tema": {"raster": {"accent": "#ffd08a"}}}
+    # a per-theme override of the colours, e.g. {"colori_tema": {"dark": {"over": "fg"}}}
     for role, v in cfg.get('colori_tema', {}).get(tid, {}).items():
         t.roles[role] = tokens[v] if v in tokens else hexrgb(v)
     car = dict(cfg.get('caratteri', {}))
