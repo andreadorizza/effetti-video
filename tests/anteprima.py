@@ -2,7 +2,7 @@
 
     .venv/bin/python tests/anteprima.py <clip.mp4> <work folder> [--effetto da-fare]
 
-The clip should be at least 45 x 2.8 s long (each effect gets its own window). Each tile is the frame
+The clip should be at least 45 x --slot seconds long (each effect gets its own window). Each tile is the frame
 at `PEAK` of its window, where most effects are fully in; tweak PEAK per effect if one looks early.
 """
 import argparse, json, os, subprocess, sys
@@ -24,7 +24,9 @@ THEMES = [('neutro', None, None), ('dori · screen', 'temi/dori', 'screen'), ('d
 
 ap = argparse.ArgumentParser()
 ap.add_argument('clip'); ap.add_argument('work'); ap.add_argument('--effetto', default='da-fare')
+ap.add_argument('--slot', type=float, default=2.8, help='seconds per effect (45 x slot must fit in the clip)')
 a = ap.parse_args()
+SLOT = a.slot
 os.makedirs(a.work, exist_ok=True)
 py = sys.executable
 names = [k for k, _ in ordered()]
@@ -50,7 +52,7 @@ for i, n in enumerate(names):
 grid_out = os.path.join(a.work, 'g.png')
 run(plan, stills, grid_out)
 
-F = ImageFont.truetype(os.path.join(HERE, 'fonts', 'Inter.ttf'), 30)
+F = ImageFont.truetype(os.path.join(HERE, 'fonts', 'Inter.ttf'), 24)
 F.set_variation_by_axes([32, 760])
 tw, th, cols = 270, 480, 9
 
@@ -59,8 +61,8 @@ def tile(path, label):
     im = Image.open(path).convert('RGB').resize((tw, th), Image.LANCZOS)
     d = ImageDraw.Draw(im, 'RGBA')
     w = F.getlength(label)
-    d.rounded_rectangle([10, th - 50, 10 + w + 24, th - 10], 10, fill=(0, 0, 0, 170))
-    d.text((22, th - 46), label, font=F, fill=(255, 255, 255))
+    d.rounded_rectangle([8, th - 42, 8 + w + 18, th - 8], 8, fill=(0, 0, 0, 170))
+    d.text((17, th - 39), label, font=F, fill=(255, 255, 255))
     return im
 
 

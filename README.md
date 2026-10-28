@@ -4,6 +4,8 @@ Trascini il video in Claude, scrivi `/effetti` e il nome dell'effetto, e non dev
 
 ![I 45 effetti](assets/anteprima.jpg)
 
+*Sotto la griglia c'è `titolo-diviso` col tema neutro e con le tre varianti video del tema `dori`.*
+
 È la versione italiana di [claude-video-effects](https://github.com/Vibha-Ramprakash/claude-video-effects) di [Vibha Ramprakash](https://instagram.com/vibha.in.progress). Gli effetti sono gli stessi 45 e col tema neutro escono identici ai suoi, pixel per pixel. Rispetto all'originale cambia questo:
 
 - È in italiano: i nomi (`orbita`, `riflettore`, `scontrino`), le opzioni e i testi che compaiono nel video, come "Segui già" o "Aggiungi un commento...". I nomi inglesi funzionano ancora.

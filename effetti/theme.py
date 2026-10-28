@@ -190,7 +190,7 @@ def use(spec=None, theme_id=None):
         P.__dict__.update(t.__dict__); return P
     path = spec
     if not os.path.exists(path):
-        for cand in (os.path.join(ROOT, 'temi', spec), os.path.join(ROOT, 'temi', spec + '.json')):
+        for cand in (os.path.join(ROOT, spec), os.path.join(ROOT, 'temi', spec), os.path.join(ROOT, 'temi', spec + '.json')):
             if os.path.exists(cand): path = cand; break
         else:
             raise SystemExit(f"Tema non trovato: {spec}")

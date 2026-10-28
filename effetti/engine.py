@@ -100,7 +100,7 @@ def render(plan, src, dst, stills=None, width=1080, tracking='auto'):
     if not stills:
         enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(fr), '-i', '-',
                                 '-i', src, '-map', '0:v', '-map', '1:a:0?',
-                                '-vf', 'scale=out_color_matrix=bt709:out_range=tv,format=yuv420p',
+                                '-vf', 'scale=out_color_matrix=bt709:out_range=tv,format=yuv420p,setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=bt709',
                                 '-c:v', 'libx264', '-crf', '17', '-preset', 'medium',
                                 '-color_range', 'tv', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709',
                                 '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', dst], stdin=subprocess.PIPE)
