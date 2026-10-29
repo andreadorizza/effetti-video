@@ -1,0 +1,15 @@
+name: prove
+on: [push, pull_request]
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'   # scripts/setup.sh and SKILL.md ask for 3.12
+          cache: pip
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg libgl1 libegl1 libgles2   # GL libraries for OpenCV and MediaPipe
+      - run: pip install -r requirements.txt
+      - run: python tests/lint.py
+      - run: python tests/fumo.py

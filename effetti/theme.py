@@ -173,7 +173,9 @@ class Theme:
     def f(self, role, neutral):
         """A colour as float32 0..1 for numpy maths: the theme's, or `neutral` (already 0..1) untouched."""
         import numpy as np
-        v = self._tint(role, [int(round(x * 255)) for x in list(neutral)[:3]]) or self.roles.get(role)
+        # neutral may be None: timeline reads the ground only when the theme sets it
+        tint = self._tint(role, [int(round(x * 255)) for x in list(neutral)[:3]]) if neutral is not None else None
+        v = tint or self.roles.get(role)
         return np.float32(neutral) if v is None else np.float32(v) / 255
 
     def font_path(self, kind):

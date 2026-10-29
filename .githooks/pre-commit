@@ -1,0 +1,8 @@
+#!/bin/sh
+# Il lint a ogni commit; la prova di fumo quando il commit tocca effetti/ o temi/. Si attiva una volta per clone:
+#   git config core.hooksPath .githooks
+PY=.venv/bin/python; [ -x "$PY" ] || PY=python3
+"$PY" tests/lint.py || exit 1
+if git diff --cached --name-only | grep -qE '^(effetti|temi)/'; then
+  "$PY" tests/fumo.py || exit 1
+fi

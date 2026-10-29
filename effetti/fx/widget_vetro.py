@@ -112,7 +112,7 @@ def glass_widgets_v2(c, e):
     mu.alpha_composite(art2, (int(22 * u), int(22 * u)))
     d.text((134 * u, 44 * u), tr('IN MONTAGGIO', 'NOW EDITING'), font=font('mono', 15 * u), fill=white + (200,), anchor='lm')
     d.text((134 * u, 78 * u), e.o.get('song', tr('clic morbidi', 'soft UI pops')), font=font('uib', 28 * u), fill=white + (255,), anchor='lm')
-    d.text((134 * u, 108 * u), 'sfx · 25.7s', font=font('uim', 20 * u), fill=white + (200,), anchor='lm')
+    d.text((134 * u, 108 * u), num('sfx · 25.7s'), font=font('uim', 20 * u), fill=white + (200,), anchor='lm')
     pp = clamp(c.lt / max(0.5, e.d)); d.rounded_rectangle([22 * u, 140 * u, mw - 22 * u, 146 * u], P.r(3 * u), fill=track + (70,))
     d.rounded_rectangle([22 * u, 140 * u, 22 * u + (mw - 44 * u) * pp, 146 * u], P.r(3 * u), fill=white + (240,))
     cxm, cym = mw / 2, 184 * u
