@@ -57,7 +57,7 @@ Le schermate vere restano dei loro colori: il tema cambia la grafica, non le ree
 ## I 45 effetti
 | # | Nome | Cosa fa | Opzioni (tutte facoltative) | Originale |
 |---|---|---|---|---|
-| 1 | `rumore` | Le tue reel si accumulano dietro la testa, una ogni quarto di secondo | `immagini` (cartella di screenshot o clip), `dimensione` | `noise` |
+| 1 | `rumore` | Le tue reel si accumulano dietro la testa, una ogni quarto di secondo | `immagini` (cartella di screenshot o clip), `dimensione`, `lati: alterna` (una reel a sinistra e una a destra, a turno) | `noise` |
 | 2 | `in-fila` | Tessere numerate si aprono ad arco sopra la testa | `testo` (nomi delle tessere separati da `\|`) | `lineup` |
 | 3 | `agganciato` | Quattro angoli si agganciano al viso, la camera ti segue | `zoom` (1.35), `testo` (etichetta) | `locked-on` |
 | 4 | `orbita` | Le tue reel ti girano intorno alla testa: davanti in basso, dietro in alto | `immagini`, `quanti`, `velocita`, `dimensione` | `orbit` |
