@@ -208,9 +208,13 @@ def vignette(c, strength=0.35):
     c.img *= (1 - strength * _vig[k])[..., None]
 
 
-def card(im, w, radius=0.07):
-    """A reel-shaped (9:16) rounded card with a soft shadow."""
-    h = int(w * 16 / 9)
+SHAPES = {'reel': 16 / 9, 'square': 1.0, 'wide': 3 / 4}  # a card's height / width, by the "formato" option
+
+
+def card(im, w, radius=0.07, shape='reel'):
+    """A rounded card with a soft shadow: reel-shaped (9:16) by default, 'square' (1:1) or 'wide' (4:3)
+    for cards that carry a logo or a screenshot instead of a reel (formato quadrato / orizzontale)."""
+    h = int(w * SHAPES.get(shape, SHAPES['reel']))
     src = im.convert('RGB'); sw, sh = src.size
     s = max(w / sw, h / sh)
     src = src.resize((max(w, int(sw * s)), max(h, int(sh * s))), Image.LANCZOS)

@@ -15,7 +15,7 @@ def fx_noise(c, e):
             pos = [(x, y, r) if (x < 0.5) == (i % 2 == 0) else (1 - x, y, -r) for i, (x, y, r) in enumerate(pos)]
         return pos
     pos = cached(e, 'pos', setup)
-    cards = cached(e, 'cards', lambda: [card(vary(im, i) if e.o.get('images') is None else im, cw) for i, im in enumerate(e.cards)])
+    cards = cached(e, 'cards', lambda: [card(vary(im, i) if e.o.get('images') is None else im, cw, shape=e.o.get('shape', 'reel')) for i, im in enumerate(e.cards)])
     out = clamp((e.d - c.lt) / 0.2)
     for i, (x, y, r) in enumerate(pos):
         t0 = i * 0.22

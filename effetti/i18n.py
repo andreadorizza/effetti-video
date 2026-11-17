@@ -87,6 +87,7 @@ OPTIONS = {
     'giri': 'turns', 'visualizzazioni': 'views', 'spinta': 'push', 'sfocatura': 'blur', 'posizione': 'pos',
     'sovrapposizione': 'overlap', 'accento': 'accent', 'destra': 'right', 'righe_y': 'lines_y',
     'destra_y': 'right_y', 'inizio': 'start', 'fine': 'end', 'effetto': 'fx', 'lati': 'sides',
+    'formato': 'shape',
 }
 # Italian option values -> the value the effect reads, per option
 VALUES = {
@@ -97,6 +98,7 @@ VALUES = {
     'font': {'grassetto': 'bold', 'corsivo': 'serif', 'mano': 'hand', 'macchina': 'mono'},
     'pos': {'sotto': 'below', 'sopra': 'above'},
     'sides': {'alterna': 'alternate', 'alternati': 'alternate'},
+    'shape': {'quadrato': 'square', 'quadrata': 'square', 'orizzontale': 'wide', 'verticale': 'reel'},
 }
 
 

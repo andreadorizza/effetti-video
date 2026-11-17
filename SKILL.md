@@ -57,10 +57,10 @@ Le schermate vere restano dei loro colori: il tema cambia la grafica, non le ree
 ## I 45 effetti
 | # | Nome | Cosa fa | Opzioni (tutte facoltative) | Originale |
 |---|---|---|---|---|
-| 1 | `rumore` | Le tue reel si accumulano dietro la testa, una ogni quarto di secondo | `immagini` (cartella di screenshot o clip), `dimensione`, `lati: alterna` (una reel a sinistra e una a destra, a turno) | `noise` |
+| 1 | `rumore` | Le tue reel si accumulano dietro la testa, una ogni quarto di secondo | `immagini` (cartella di screenshot o clip), `dimensione`, `lati: alterna` (una reel a sinistra e una a destra, a turno), `formato` (`reel`, `quadrato`, `orizzontale`) | `noise` |
 | 2 | `in-fila` | Tessere numerate si aprono ad arco sopra la testa | `testo` (nomi delle tessere separati da `\|`) | `lineup` |
 | 3 | `agganciato` | Quattro angoli si agganciano al viso, la camera ti segue | `zoom` (1.35), `testo` (etichetta) | `locked-on` |
-| 4 | `orbita` | Le tue reel ti girano intorno alla testa: davanti in basso, dietro in alto | `immagini`, `quanti`, `velocita`, `dimensione` | `orbit` |
+| 4 | `orbita` | Le tue reel ti girano intorno alla testa: davanti in basso, dietro in alto | `immagini`, `quanti`, `velocita`, `dimensione`, `formato` (`reel`, `quadrato`, `orizzontale`) | `orbit` |
 | 5 | `zoom-lampo` | Uno zoom veloce su una parola | `zoom` (1.45, massimo 2), `velocita` | `lean-in` |
 | 6 | `parola-dietro` | Una parola gigante cade dietro di te | `testo`, `colore` (hex), `carattere` (`grassetto` o `corsivo`) | `backdrop-word` |
 | 7 | `riflettore` | Le luci si spengono, resti illuminato solo tu | `testo` (parola luminosa dietro di te), `colore`, `spinta` | `spotlight` |
